@@ -58,7 +58,7 @@ pls_result_X = behavioral_pls(Y, X, n_boot=nperm, n_perm=nperm, rotate=True, per
                               permindices=False, test_split=0, seed=0)
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-#                       LOAD WEATHER DATA AND RUN PLS
+#                       PLOT PLS RESULTS
 ###############################################################################
 lv = 0
 cv = pls_result["singvals"]**2 / np.sum(pls_result["singvals"]**2)
@@ -75,6 +75,7 @@ ax.set_xlabel('Latent variable')
 sns.despine()
 ax.set_xticklabels([str(i) for i in np.arange(len(cv))+1], rotation=90)
 fig.tight_layout()
+plt.savefig('./figs/mica-mics_pls_lv.pdf')
 
 # score plot
 xscore = pls_result["x_scores"][:, lv]
@@ -85,6 +86,7 @@ scores = pd.DataFrame({'FC scores': xscore,
 fig, ax = plt.subplots(1, 1, dpi=200, figsize=(6, 6))
 sns.regplot(data=scores, x='FC scores', y='Weather scores', ax=ax)
 sns.despine()
+plt.savefig('./figs/mica-mics_pls_score_plot.pdf')
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #                       BRAIN LOADINGS
@@ -125,10 +127,10 @@ fc_net_df = fc_net_df.sort_values('loading', ascending=False)
 
 fig, ax = plt.subplots(1, 1, dpi=200, figsize=(6,3))
 sns.barplot(x='network', y='loading', data=fc_net_df, ax=ax, errorbar=None, palette='tab10', hue='network')
-ax.errorbar(fc_net_df['network'], fc_net_df['loading'], yerr=fc_net_df['err'], linestyle='None', color='black')
+ax.errorbar(fc_net_df['network'], fc_net_df['loading'], yerr=fc_net_df['err'], linestyle='None', color='grey')
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 sns.despine()
-
+plt.savefig('./figs/mica-mics_pls_loadings_brain_network.pdf')
 
 # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #                       WEATHER LOADINGS
@@ -153,3 +155,5 @@ ax.get_legend().remove()
 ax.set_xticklabels(ax.get_xticklabels(), rotation=90)
 sns.despine()
 fig.tight_layout()
+
+plt.savefig('./figs/mica-mics_pls_loadings_weather.pdf')
